@@ -1,0 +1,19 @@
+{
+  "name": "memery",
+  "version": "1.0.0",
+  "description": "memery game",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sumeetgrewal/memery.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sumeetgrewal/memery/issues"
+  },
+  "homepage": "https://github.com/sumeetgrewal/memery#readme"
+}
