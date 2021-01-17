@@ -1,12 +1,16 @@
 {
     "compilerOptions": {
+      "skipLibCheck": true,
       "module": "commonjs",
       "esModuleInterop": true,
       "allowSyntheticDefaultImports": true,
+      "forceConsistentCasingInFileNames": true,
       "target": "es6",
+      "strict": true,
       "moduleResolution": "node",
       "sourceMap": true,
-      "outDir": "dist"
+      "outDir": "dist",
+      "noUnusedLocals": true,
     },
     "include": ["src/**/*"],
     "lib": ["es2015"]
