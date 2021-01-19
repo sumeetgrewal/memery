@@ -17,8 +17,11 @@ function shouldCompress (req: any, res: any) {
   return compression.filter(req, res)
 }
 
+const gameRouter = require('./routes/game')
+app.use('/game', gameRouter);
+
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '/client/build', 'index.html'));
+  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
 });
 
 app.listen(port,  () => {
@@ -26,3 +29,5 @@ app.listen(port,  () => {
 });
 
 app.on('error', (err) => console.log(err))
+
+module.exports = app;
