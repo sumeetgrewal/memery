@@ -17,15 +17,19 @@ function shouldCompress (req: any, res: any) {
   return compression.filter(req, res)
 }
 
-const gameRouter = require('./routes/game')
-const playerRouter = require('./routes/player')
-app.use('/game', gameRouter);
-app.use('/player', playerRouter);
+const createRouter = require('./routes/create')
+const joinRouter = require('./routes/join')
+const connectRouter = require('./routes/connect')
+const playRouter = require('./routes/play')
+
+app.use('/game/create', createRouter);
+app.use('/game/:gameId/join', joinRouter);
+app.use('/game/:gameId/connect', connectRouter)
+app.use('/game/:gameId/play', playRouter)
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
 });
-
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(port, () => {

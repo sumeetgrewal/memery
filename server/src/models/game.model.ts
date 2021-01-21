@@ -3,7 +3,7 @@ const JWTHandlers = require('../middleware/jwt.authorization')
 let sseID = 2;
 
 interface GameModel  {
-    gameCode: string,
+    gameId: string,
     status: string,
     players: {
         [username: string] : Player
@@ -27,14 +27,14 @@ export class Player implements PlayerModel {
 }
 
 export class Game implements GameModel {
-    gameCode = ""; 
+    gameId = ""; 
     players: {
         [username: string] : Player
     } = {};
     status = "setup" // setup OR game
 
-    constructor(gameCode: string) {
-        this.gameCode = gameCode;
+    constructor(gameId: string) {
+        this.gameId = gameId;
     }
 
     addPlayer(username: string) {
@@ -51,10 +51,10 @@ export class Game implements GameModel {
 export function pushUpdateToPlayers(data: string, event: string = 'message', clients: any[]) {
     clients.forEach((client: any) => {
         if (client) {
-            client.res.write(`id: ${sseID++}\n`);
-            client.res.write(`event: ${event}\n`);
-            client.res.write(`data: ${data}\n\n`);
-            client.res.flush();
+            client.write(`id: ${sseID++}\n`);
+            client.write(`event: ${event}\n`);
+            client.write(`data: ${data}\n\n`);
+            client.flush();
         }
     });
 }
