@@ -1,9 +1,22 @@
 const app = require('../index')
 const supertest = require('supertest');
-const agent = supertest(app);
 import {gameServer} from '../models/gameServer.model'
 
 let gameCode: string;
+let server: any, agent: any;
+
+beforeAll((done) => {
+    process.env.NODE_ENV = 'test';
+    server = app.listen(3001, (err: any) => {
+        if (err) return done(err);
+        agent = supertest.agent(server); 
+        done();
+    });
+})
+
+afterAll(async () => {
+    await server.close() 
+})
 
 describe('GET /game/join', () => {
 
