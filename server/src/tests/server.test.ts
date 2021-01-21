@@ -1,1 +1,0 @@
-it ("Should run tests", () => console.log("success"))
