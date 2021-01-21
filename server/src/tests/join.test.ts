@@ -1,6 +1,6 @@
 const app = require('../index')
 const supertest = require('supertest');
-import {gameServer} from '../models/gameServer.model'
+import { gameServer } from '../models/gameServer.model';
 
 let gameId: string;
 let server: any, agent: any;
@@ -25,8 +25,8 @@ describe('POST /game/:gameId/join', () => {
             .set('Content-Type', 'application/json')
 
         gameId = response.body.gameId;
-        console.log(gameId);
-        gameServer[gameId].status = "setup";
+        console.log(gameId, gameServer);
+        gameServer.games[gameId].status = "setup";
     })
 
     it('Game does not exist -> 404', async () => {
@@ -70,7 +70,7 @@ describe('POST /game/:gameId/join', () => {
             username: 'Player One'
         }
 
-        gameServer[gameId].status = 'game';
+        gameServer.games[gameId].status = 'game';
 
         await agent.post(`/game/${gameId}/join`)
         .set('Content-Type', 'application/json')

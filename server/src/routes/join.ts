@@ -1,4 +1,4 @@
-import { gameServer } from "../models/gameServer.model";
+import { gameServer } from '../models/gameServer.model';
 
 const router = require('express').Router({ mergeParams: true});
 const MAX_PLAYERS = 8;
@@ -16,11 +16,11 @@ router.route('/').post((req: any, res: any) => {
     const { username } = req.body;
     const { gameId } = req.params;
 
-    if (!Object.keys(gameServer).includes(gameId)) {
+    if (!Object.keys(gameServer.games).includes(gameId)) {
         return res.status(404).json({status: "Error", message: "Game Does Not Exist"})
     }
 
-    const game = gameServer[gameId];
+    const game = gameServer.games[gameId];
     const playerNames = Object.keys(game.players);
 
     if (game.status !== "setup") {

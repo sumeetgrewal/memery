@@ -58,5 +58,3 @@ export function pushUpdateToPlayers(data: string, event: string = 'message', cli
         }
     });
 }
-
-export const gameServer: {[code: string] : Game } = {};

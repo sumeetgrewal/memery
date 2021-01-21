@@ -1,6 +1,7 @@
 const app = require('../index')
 const supertest = require('supertest');
-import {gameServer} from '../models/gameServer.model'
+import { gameServer } from '../models/gameServer.model';
+
 
 let gameId: string;
 let server: any, agent: any;
@@ -63,7 +64,7 @@ describe('POST /game/create', () => {
     })
     
     it('Join Game in Progress, return 402', async () => {
-        gameServer[gameId].status = "game";
+        gameServer.games[gameId].status = "game";
         await agent.post('/game/create')
             .set('Content-Type', 'application/json')
             .send(JSON.stringify({gameId}))
