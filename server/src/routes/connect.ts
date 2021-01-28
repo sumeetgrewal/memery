@@ -19,12 +19,12 @@ router.route('/').get((req: any, res: any) => {
     res.write(`data: ${JSON.stringify({ })}\n\n`);
     res.flush();
 
-    // addClient(username, res);
+    // TODO Add Client
 
     req.on('close', () => {
       console.log("Closed connection", username);
       res.end();
-    //   removeClient(username);
+      // TODO Remove Client
     })
   }
 })

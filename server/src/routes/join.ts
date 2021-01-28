@@ -1,4 +1,5 @@
 import { gameServer } from '../models/gameServer.model';
+let JWTHandlers = require('../middleware/jwt.authorization');
 
 const router = require('express').Router({ mergeParams: true});
 const MAX_PLAYERS = 8;
@@ -41,12 +42,31 @@ router.route('/').post((req: any, res: any) => {
 User selects I'm Ready
 
     check token
-    return 200 
+    return 200  
     send update to players
 
 */
-router.route('/:gameId').put((req: any, res: any) => {
+router.route('/').put((req: any, res: any) => {
+    const decodedToken: any = JWTHandlers.checkToken(req)
+    const { gameId } = req.params;
 
+    if (!decodedToken) { 
+        return res.status(400).json({ status: 'Error', message: 'Invalid token'});
+    } else if (!Object.keys(gameServer.games).includes(gameId)) {
+        return res.status(404).json({status: "Error", message: "Game Does Not Exist"})
+    }
+
+    const game = gameServer.games[gameId];
+    const { username } = decodedToken;
+
+
+    if (game.status !== "setup") {
+        return res.status(400).json({status: "Error", message: "Game is in progress"})
+    } else if (!game.players[username]) {
+        return res.status(400).json({status: 'Error', message: 'Player does not exist'})
+    } 
+    
+    return res.status(200).json({status: 'Success'})
 })
 
 /*
@@ -57,8 +77,20 @@ Any User selects Start game
     send update to players
 
 */
-router.route('/:gameId/start').get((req: any, res: any) => {
+router.route('/start').get((req: any, res: any) => {
+    // TODO M2
+})
 
+/*
+User selects Exit
+
+
+    return 200
+    send update to players
+
+*/
+router.route('/:gameId').delete((req: any, res: any) => {
+    // TODO M2
 })
 
 module.exports = router;
