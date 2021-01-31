@@ -1,4 +1,5 @@
-// model for a single game
+import { Player } from "./player.model";
+
 const JWTHandlers = require('../middleware/jwt.authorization')
 let sseID = 2;
 
@@ -8,22 +9,6 @@ interface GameModel  {
     players: {
         [username: string] : Player
     },
-}
-
-interface PlayerModel {
-    id: number,
-    username: string,
-    client: any,
-}
-
-export class Player implements PlayerModel {
-    id=0;
-    username = "";
-    client = undefined;
-    constructor(username: string, id: number) {
-        this.username = username;
-        this.id = id;
-    }
 }
 
 export class Game implements GameModel {
@@ -39,12 +24,30 @@ export class Game implements GameModel {
 
     addPlayer(username: string) {
         this.players[username] = new Player(username, Object.keys(this.players).length+1)
-        pushUpdateToPlayers( JSON.stringify({players: this.players}), 'playerUpdate', this.getClients());
+        this.sendPlayerUpdate();
         return JWTHandlers.createToken(username);
+    }
+
+    removePlayer(username: string) {
+        if (this.players[username]) delete this.players[username];
+        this.sendPlayerUpdate();
     }
 
     getClients() {
         return Object.values(this.players).map((p: Player) => {if (p.client) return p.client})
+    }
+
+    startGame() {
+        this.status = 'game';
+        this.sendGameUpdate();
+    }
+
+    sendPlayerUpdate() {
+        pushUpdateToPlayers(JSON.stringify({players: this.players}), 'playerUpdate', this.getClients());
+    }
+
+    sendGameUpdate() {
+        pushUpdateToPlayers(JSON.stringify({status: this.status}), 'gameUpdate', this.getClients());
     }
 }
 

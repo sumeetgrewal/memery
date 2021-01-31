@@ -33,11 +33,7 @@ describe('POST /game/:gameId/join', () => {
         let req: any = {
             username: 'Player One'
         }
-    
-        await agent.post(`/game/ABC/join`)
-            .set('Content-Type', 'application/json')
-            .send(JSON.stringify(req))
-            .expect(404)
+        await testEndpoint('post', `/game/ABC/join`, JSON.stringify(req),"", 404)
     })
 
     it('Player created successfully -> 200', async () => {
@@ -45,10 +41,7 @@ describe('POST /game/:gameId/join', () => {
             username: 'Player One'
         }
 
-        await agent.post(`/game/${gameId}/join`)
-        .set('Content-Type', 'application/json')
-        .send(JSON.stringify(req))
-        .expect(200);
+        await testEndpoint('post', `/game/${gameId}/join`, JSON.stringify(req),"", 200)
     })
 
     it('Username is already taken -> 400', async () => {
@@ -71,11 +64,7 @@ describe('POST /game/:gameId/join', () => {
         }
 
         gameServer.games[gameId].status = 'game';
-
-        await agent.post(`/game/${gameId}/join`)
-        .set('Content-Type', 'application/json')
-        .send(JSON.stringify(req))
-        .expect(400)
+        await testEndpoint('post', `/game/${gameId}/join`, JSON.stringify(req),"", 400)
     })
 
     it('Game is full -> 401', async () => {
@@ -87,7 +76,7 @@ describe('POST /game/:gameId/join', () => {
                 .send(JSON.stringify({username}))
         });
 
-        await Promise.all(promises).then(() => { 
+        await Promise.all(promises).then(async () => { 
             agent.post(`/game/${gameId}/join`)
             .set('Content-Type', 'application/json')
             .send(JSON.stringify({username: 'Player Nine'}))
@@ -99,6 +88,7 @@ describe('POST /game/:gameId/join', () => {
 describe('PUT /game/:gameId/join', () => {
     let gameId: string;
     let token: any;
+    const username = 'Player One';
 
     beforeAll(async () => {
         let response = await agent.get('/game/create')
@@ -107,23 +97,114 @@ describe('PUT /game/:gameId/join', () => {
         gameId = response.body.gameId;
         gameServer.games[gameId].status = "setup";
 
-        const res = await agent.post(`/game/${gameId}/join`)
-            .set('Content-Type', 'application/json')
-            .send(JSON.stringify({username: 'Player One'}))
+        const res = await testEndpoint('post',`/game/${gameId}/join`, JSON.stringify({username}),"",200)
         token = res.body.token;
     })
 
     it("User doesn't have a token", async () => {
-        await agent.put(`/game/${gameId}/join`)
-            .set('Content-Type', 'application/json')
-            .set('Cookie', `token=${''}`)
-            .expect(400);
+        await testEndpoint('put', `/game/${gameId}/join`, "",`token=${''}`, 400)
     })
 
     it("User selects I'm Ready", async () => {
-        await agent.put(`/game/${gameId}/join`)
-            .set('Content-Type', 'application/json')
-            .set('Cookie', `token=${token}`)
-            .expect(200);
+        await testEndpoint('put', `/game/${gameId}/join`, "",`token=${token}`, 200)
+    })
+
+    it("User's status should be set to ready", () => {
+        const { status } = gameServer.games[gameId].players[username];
+        expect(status).toEqual("ready");
+    })
+
+    it("User selects I'm Ready", async () => {
+        await testEndpoint('put', `/game/AAA/join`, "", `token=${token}`, 404)
     })
 })
+
+describe('DELETE /game/:gameId/join', () => {
+    let gameId: string;
+    let token: any;
+    const username = 'Player One';
+
+    beforeAll(async () => {
+        let response = await agent.get('/game/create')
+            .set('Content-Type', 'application/json')
+
+        gameId = response.body.gameId;
+        gameServer.games[gameId].status = "setup";
+
+        const res = await testEndpoint('post',`/game/${gameId}/join`, JSON.stringify({username}),"",200)
+        token = res.body.token;
+    })
+
+    it("Game does not exist", async () => {
+        await testEndpoint('delete', `/game/AAA/join`, "",`token=${token}`, 404)
+    })
+
+    it("User doesn't have a token", async () => {
+        await testEndpoint('delete', `/game/${gameId}/join`, "",`token=${''}`, 400)
+    })
+
+    it("User selects Exit", async () => {
+        const players = gameServer.games[gameId].players
+        expect(username in players).toBe(true);
+
+        await testEndpoint('delete', `/game/${gameId}/join`, "",`token=${token}`, 200)
+    })
+
+    it("User has been removed from game", () => {
+        const players = gameServer.games[gameId].players
+        expect(username in players).toBe(false);
+    })
+})
+
+describe('GET /game/:gameId/join/start', () => {
+    let gameId: string;
+    let token: any;
+    const username = 'Player One';
+
+    beforeAll(async () => {
+        let response = await agent.get('/game/create')
+            .set('Content-Type', 'application/json')
+
+        gameId = response.body.gameId;
+        gameServer.games[gameId].status = "setup";
+
+        const res = await testEndpoint('post',`/game/${gameId}/join`, JSON.stringify({username}),"",200)
+        token = res.body.token;
+        await testEndpoint('post',`/game/${gameId}/join`, JSON.stringify({username: "Player Two"}),"",200)
+    })
+
+    it("Game does not exist", async () => {
+        await testEndpoint('get', `/game/AAA/join/start`, "",`token=${token}`, 404)
+    })
+
+    it("User doesn't have a token", async () => {
+        await testEndpoint('get', `/game/${gameId}/join/start`, "",`token=${''}`, 400)
+    })
+
+    it("User is not ready", async () => {
+        await testEndpoint('get', `/game/${gameId}/join/start`, "",`token=${token}`, 403)
+    })
+
+    it("One user is ready, one is not", async () => {
+        gameServer.games[gameId].players[username].status = 'ready';
+        await testEndpoint('get', `/game/${gameId}/join/start`, "",`token=${token}`, 403)
+    })
+
+    it("All users ready, start game", async () => {
+        const game = gameServer.games[gameId]
+        
+        game.players['Player Two'].status = 'ready';
+
+        await testEndpoint('get', `/game/${gameId}/join/start`, "",`token=${token}`, 200)
+
+        expect(game.status).toEqual("game")
+    })
+})
+
+async function testEndpoint( method: string, endpoint: string, data: string = "", cookie: any = "", expectCode: number) {    
+    return await agent[method](endpoint)
+            .set('Content-Type', 'application/json')
+            .set('Cookie', cookie)
+            .send(data)
+            .expect(expectCode);
+}
