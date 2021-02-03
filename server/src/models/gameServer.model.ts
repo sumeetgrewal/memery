@@ -1,6 +1,6 @@
 import { Game } from "./game.model";
 
-// Container for all gameså
+// Container for all games
 class GameServer {
     games: {[Id: string] : Game } = {}
 
