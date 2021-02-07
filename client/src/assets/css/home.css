@@ -5,12 +5,13 @@
     left: 0px;
     top: 0px;
     background-color: var(--light-green);
-    z-index: 2;
     color: var(--medium-green);
     text-align: right;
-    --right-margin: 50px;
-    background-color: var(--dark-gray); /* DARK MODE */
-    color: white; /* DARK MODE */
+    --margin: 30px;
+
+     /* DARK MODE */
+    /* background-color: var(--dark-gray); 
+    color: white; */
 }
 
 #home-background {
@@ -18,10 +19,12 @@
     height: 100%; 
     position: absolute;
     top: 0px;
-    left: 400px;
+    left: 450px;
     background-color: white;
-    z-index: 1;
-    background-color: var(--dark-gray); /* DARK MODE */
+    z-index: -1;
+
+    /* DARK MODE */
+    /* background-color: var(--dark-gray);  */
 }
 
 #home-title {
@@ -29,14 +32,14 @@
     top: 25%;
     margin-right: -0.25em;
     letter-spacing: 0.25em;
-    right: var(--right-margin);
+    right: var(--margin);
 }
 
 .home-link {
     position: absolute;
     letter-spacing: 0.25em;
     font-size: 1.3em;
-    right: var(--right-margin);
+    right: var(--margin);
 }
 
 .home-join {
@@ -50,12 +53,15 @@
 .text-reflect:after {
     display: block;
     transform: scale(1, -1);
-    z-index: 4;
+    z-index: 2;
     background: linear-gradient(#ffffff00, #09B092aa);
     background-clip: text;
     color: transparent;
     opacity: 0.5;
     text-shadow: none;
+
+     /* DARK MODE */
+    /* opacity: 0.8;  */
 }
 
 #home-title:after {
@@ -68,4 +74,77 @@
 
 .home-new:after {
     content: 'neW GAMe';
+}
+
+.arrow-btn {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    margin-top: -10px;
+    margin-left: 30px;
+    transition: 0.2s all;
+}
+
+.arrow-btn:hover, .arrow-btn:focus, .arrow-btn:active {
+    transition: 0.1s all;
+    outline: none;
+    box-shadow: 0px 0px 10px 0px #00000060;
+
+    /* DARK MODE */
+    /* box-shadow: 0px 0px 10px 0px #000000d0; */
+}
+
+.id-form-input {
+    width: 50px;
+    height: 50px;
+    margin-right: 20px;
+    background-color: var(--medium-green);
+    border: none;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    transition: 0.2s all;
+}
+
+.id-form-input:focus, .id-form-input:active {
+    transition: 0.1s all;
+    outline: none;
+    box-shadow: 0px 0px 10px 0px #00000060;
+}
+
+.submit-btn {
+    margin: 0;
+}
+
+.gameIdForm {
+    position: absolute;
+    margin-left: 30px;
+    margin-top: -10px;
+    top: 45%;
+}
+
+@media (max-width:500px) {
+    #home-container {
+        width: 300px;
+        font-size: 0.8em;
+    }
+
+    #home-title {
+        font-size: 2em;
+    }
+
+    #home-background {
+        width: calc(100% - 300px);
+        left: 300px;
+    }
+}
+
+@media (max-height:500px) {
+    #home-title {
+        font-size: 2em;
+    } 
+    #home-container {
+        font-size:0.8em;
+    }
 }
