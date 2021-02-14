@@ -3,14 +3,15 @@ import arrow from '../assets/images/arrow-light.png'
 
 interface IdFormProps {
     numInputs: number,
-    onSubmit: (value: string) => any,
+    submitHandler: (value: string) => any,
 }
 
 export default function IdForm (props: IdFormProps) {
     const [ formValue, setFormValue ] = useState(new Array(props.numInputs).fill(""))
 
-    const handleSubmit = () => {
-        props.onSubmit(formValue.join(""));
+    const handleSubmit = (event: any) => {
+        event.preventDefault();
+        props.submitHandler(formValue.join(""));
     }
     
     const handleInputChange = (e: any ) => {
@@ -60,7 +61,7 @@ export default function IdForm (props: IdFormProps) {
     }
 
     return (<>
-        <form name="IdForm" onSubmit={handleSubmit} className="id-form">
+        <form name="IdForm" className="id-form">
             {renderInputs()}
             <input type="image" src={arrow} className={`arrow-btn submit-btn`} 
                 alt="arrow button" id="submit-game-id" 

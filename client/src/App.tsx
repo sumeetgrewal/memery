@@ -1,9 +1,11 @@
 import * as React from "react";
 import { Player } from '../../server/src/models/player.model'
 import Home from "./components/Home";
+import Join from "./components/Join";
 
 interface AppState {
-  status: string
+  status: string,
+  gameId: string,
   players: {
     [username: string] : Player
   },
@@ -15,16 +17,24 @@ export default class App extends React.Component<{}, AppState> {
 
     this.state = {
       status: "setup",
+      gameId: "",
       players: {},
     }
+
+    this.setGameId = this.setGameId.bind(this);
   }
 
 
+  setGameId(gameId: string): Promise<void> {
+    return Promise.resolve(this.setState({gameId}));
+  }
+
   renderGameStage() {
-    const { status } = this.state;
+    const { status, gameId } = this.state;
 
     if (status === "setup") {
-      return <Home />
+      if (gameId === "") return <Home setGameId={this.setGameId}/>
+      else return <Join />
     }
 
     return (
