@@ -1,6 +1,6 @@
 import * as React from 'react';
 import '../assets/css/home.css';
-import GameIdForm from './GameIdForm';
+import IdForm from './IdForm';
 import arrow from '../assets/images/arrow-light.png'
 
 
@@ -23,6 +23,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
         }
 
         this.toggleJoin = this.toggleJoin.bind(this)
+        this.sendJoinRequest = this.sendJoinRequest.bind(this)
     }
 
 
@@ -34,6 +35,13 @@ export default class Home extends React.Component<HomeProps, HomeState> {
         // TODO
     }
 
+    sendJoinRequest(code: string): Promise<void> {
+        return new Promise((res) => {
+            console.log(code); 
+            res();
+        }) 
+    }  
+
     render() {
         return <div id="home"> 
             <div id="home-container">
@@ -42,7 +50,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                 <h3 className="home-link home-new text-reflect">neW GAMe</h3>
             </div> 
             <div id="home-background">
-                {(this.state.enterCode) ? <GameIdForm />
+                {(this.state.enterCode) ? <IdForm numInputs={4} onSubmit={this.sendJoinRequest}/>
                 : <input type="image" src={arrow} className={`arrow-btn home-join`} alt="arrow button" autoFocus={true} onClick={this.toggleJoin}/>}
                 <input type="image" src={arrow} className={`arrow-btn home-new`} alt="arrow button" onClick={this.createNewGame}/>
             </div>
