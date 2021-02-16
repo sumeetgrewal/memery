@@ -52,21 +52,19 @@ export default function IdForm (props: IdFormProps) {
                 <input className="id-form-input" key={`${i}`} type="text" 
                     maxLength={1} value={formValue[i]} 
                     id={`${i}`} autoFocus={i===0}
+                    autoComplete={"off"}
                     onKeyDown={handleBack} onChange={handleInputChange}
                 />
             )
         }
-
         return inputs;  
     }
 
-    return (<>
-        <form name="IdForm" className="id-form">
-            {renderInputs()}
-            <input type="image" src={arrow} className={`arrow-btn submit-btn`} 
-                alt="arrow button" id="submit-game-id" 
-                onClick={handleSubmit} onKeyDown={handleBack} 
-            />
-        </form>
-     </>)
+    return (<form name="IdForm" className="id-form">
+        {renderInputs()}
+        <input type="image" src={arrow} className={`arrow-btn submit-btn`} 
+            alt="arrow button" id="submit-game-id" 
+            onClick={handleSubmit} onKeyDown={handleBack} 
+        />
+    </form>)
 }
