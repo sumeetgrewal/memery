@@ -2,7 +2,7 @@ const app = require('../index')
 const supertest = require('supertest');
 import { gameServer } from '../models/gameServer.model';
 
-
+const MAX_GAMES = 50;
 let gameId: string;
 let server: any, agent: any;
 
@@ -32,7 +32,7 @@ describe('GET /game/create', () => {
 
     it('Create 11 games, return 400', async () => {
         let games: Promise<void>[] = [];
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < MAX_GAMES; i++) {
             games.push(
                 agent.get('/game/create')
                 .set('Content-Type', 'application/json')

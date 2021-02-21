@@ -2,7 +2,7 @@ import { gameServer } from '../models/gameServer.model';
 
 const router = require('express').Router({ mergeParams: true});
 // let JWTHandlers = require('../middleware/jwt.authorization')
-const MAX_GAMES = 10;
+const MAX_GAMES = 50;
 
 /*
 1. User selects 'Create New Game'

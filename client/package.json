@@ -16,6 +16,9 @@
     "typescript": "^4.1.3",
     "web-vitals": "^0.2.4"
   },
+  "devDependencies": {
+    "@types/webpack-env": "^1.15.2"
+  },
   "scripts": {
     "dev": "(cd ../server && yarn dev-server) & yarn start",
     "start": "react-scripts start",
