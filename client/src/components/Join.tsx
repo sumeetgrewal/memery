@@ -11,7 +11,7 @@ export default function Join() {
         sendJoinRequest(username);
     }
 
-    const sendJoinRequest = (username: string) => {
+    const sendJoinRequest = async (username: string) => {
         console.log(username);
     }
 

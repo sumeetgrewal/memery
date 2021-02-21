@@ -1,0 +1,29 @@
+input {
+    margin: 10px;
+}
+
+.avatar-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
+}
+.radio-img {
+    height: 60px !important;
+    width: 60px;
+    padding: 10px;
+}
+
+.radio-img.img-checked {
+    background-color: var(--light-green);
+    border: 2px solid var(--medium-green);
+}
+
+.user-form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    align-self: center;
+    padding-bottom: 30px;
+  }
+  

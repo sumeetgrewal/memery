@@ -15,7 +15,7 @@ export default function Home (props: HomeProps) {
         setEnterCode(!enterCode)
     }
 
-    const createNewGame = (): Promise<void> => {
+    const requestNewGame = (): Promise<void> => {
         return new Promise((resolve) => {
             fetch('/game/create')
             .then(async (res: any) => {
@@ -32,7 +32,7 @@ export default function Home (props: HomeProps) {
         })
     }
 
-    const sendJoinRequest = (code: string): Promise<void> => {
+    const requestGame = (code: string): Promise<void> => {
         return new Promise((resolve) => {
             fetch('/game/create/', {
                 method: "POST", 
@@ -61,9 +61,9 @@ export default function Home (props: HomeProps) {
             {(errorMessage !== "") && (
                 <div className="home-error-message label error">{errorMessage}</div>
             )}
-            {(enterCode) ? <IdForm numInputs={4} submitHandler={sendJoinRequest}/>
+            {(enterCode) ? <IdForm numInputs={4} submitHandler={requestGame}/>
             : <input type="image" src={arrow} className={`arrow-btn home-join`} alt="arrow button" autoFocus={true} onClick={toggleJoin}/>}
-            <input type="image" src={arrow} className={`arrow-btn home-new`} alt="arrow button" onClick={createNewGame}/>
+            <input type="image" src={arrow} className={`arrow-btn home-new`} alt="arrow button" onClick={requestNewGame}/>
         </div>
     </div>)
 }

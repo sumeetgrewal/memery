@@ -105,7 +105,3 @@ input:hover, input:focus, input:active, button:focus, button:active, button:hove
 input:hover.dark, input:focus.dark, input:active.dark, button:hover.dark, button:focus.dark, button:active.dark {
   box-shadow: 0px 4px 5px 0px #000000e0, 0px 0px 15px 0px #000000d0;
 }
-
-.page-title {
-  height: 50px;
-}

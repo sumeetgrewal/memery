@@ -2,9 +2,14 @@ import * as React from "react";
 import { Player } from '../../server/src/models/player.model'
 import Home from "./components/Home";
 import Join from "./components/Join";
+import Lobby from "./components/Lobby"
 
 interface AppState {
-  status: string,
+  gameState: string,
+  playerState: {
+    isJoined: boolean,
+    isConnected: boolean,
+  }
   gameId: string,
   players: {
     [username: string] : Player
@@ -16,7 +21,11 @@ export default class App extends React.Component<{}, AppState> {
     super(props);
 
     this.state = {
-      status: "setup",
+      gameState: "setup",
+      playerState: {
+        isJoined: false,
+        isConnected: false,
+      },
       gameId: "",
       players: {},
     }
@@ -30,11 +39,12 @@ export default class App extends React.Component<{}, AppState> {
   }
 
   renderGameStage() {
-    const { status, gameId } = this.state;
+    const { gameState, gameId, playerState, players } = this.state;
 
-    if (status === "setup") {
+    if (gameState === "setup") {
       if (gameId === "") return <Home setGameId={this.setGameId}/>
-      else return <Join />
+      else if (!playerState.isJoined) return <Join />
+      else return <Lobby gameId={gameId} players={players} />
     }
 
     return (
