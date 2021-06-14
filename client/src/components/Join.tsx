@@ -1,18 +1,51 @@
 import { useState } from 'react';
 import { avatarImages } from './GameAssets';
-import '../assets/css/join.css'
+import '../assets/css/join.css';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
-export default function Join() {
+interface JoinProps {
+    gameId: string,
+    setJoined: () => Promise<void>
+}
+
+export default function Join(props: JoinProps) {
     const [username, setUsername] = useState("");
     const [avatar, setAvatar] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        sendJoinRequest(username);
+        if (username === "") {
+            setErrorMessage("Please enter a username")
+        } else if (avatar === "") {
+            setErrorMessage("Please select an avatar")
+        } else {
+            sendJoinRequest(username);
+        }
     }
 
-    const sendJoinRequest = async (username: string) => {
-        console.log(username);
+    const sendJoinRequest = (username: string): Promise<void> => {
+        return new Promise((resolve) => {
+            fetch(`/game/${props.gameId}/join`, {
+                method: "POST", 
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    username,
+                    avatar,
+                })
+            }).then(async (res: any) => {
+                const data = await res.json()
+                if (res.status !== 200) throw new Error(`${res.status} ${data.message}`);
+                props.setJoined().then(() => {
+                    cookies.set('token', data.token);
+                    resolve();
+                });
+            }).catch((error: Error) => {
+                setErrorMessage(error.message)
+                resolve()   
+            })
+        })
     }
 
     const handleInputChange = (e: any) => {
@@ -59,6 +92,7 @@ export default function Join() {
         <div className="dialog-bg memery-tile h-100"> 
             <div className="dialog">
                 <h1 className="page-title text-center">JOIN game</h1>
+                {errorMessage!=="" && <div className="label error">{errorMessage}</div>}
                 <form className="user-form">
                     <h3 className="label">username</h3>
                     <input type="text" id="username" maxLength={20} autoComplete={"off"} autoFocus={true} onChange={handleInputChange} value={username} spellCheck={false} />

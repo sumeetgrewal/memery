@@ -31,11 +31,30 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     this.setGameId = this.setGameId.bind(this);
+    this.setJoined = this.setJoined.bind(this);
+    this.connectGame = this.connectGame.bind(this);
   }
 
+  async connectGame() {
+    const { gameId, playerState: { isConnected }} = this.state;
+    if (!isConnected) {
+      const connection = new EventSource(`/game/${gameId}/connect`)
+
+      connection.addEventListener('joined', (event: any) => {
+        console.log(event.data)
+      })
+    }
+  }
 
   setGameId(gameId: string): Promise<void> {
     return Promise.resolve(this.setState({gameId}));
+  }
+  
+  setJoined() : Promise<void> {
+    return Promise.resolve(this.setState({playerState: {
+      ...this.state.playerState,
+      isJoined: true
+    }}))
   }
 
   renderGameStage() {
@@ -43,8 +62,8 @@ export default class App extends React.Component<{}, AppState> {
 
     if (gameState === "setup") {
       if (gameId === "") return <Home setGameId={this.setGameId}/>
-      else if (!playerState.isJoined) return <Join />
-      else return <Lobby gameId={gameId} players={players} />
+      else if (!playerState.isJoined) return <Join gameId={gameId} setJoined={this.setJoined}/>
+      else return <Lobby connectGame={this.connectGame} gameId={gameId} players={players} />
     }
 
     return (

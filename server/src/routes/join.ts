@@ -2,7 +2,7 @@ import { gameServer } from '../models/gameServer.model';
 import { Player } from '../models/player.model';
 let JWTHandlers = require('../middleware/jwt.authorization');
 
-const router = require('express').Router({ mergeParams: true});
+const router = require('express').Router({ mergeParams: true });
 const MAX_PLAYERS = 8;
 
 /*
@@ -15,7 +15,7 @@ User selects 'Join'
     if player can be created, return 200
 */
 router.route('/').post((req: any, res: any) => {
-    const { username } = req.body;
+    const { username, avatar } = req.body;
     const { gameId } = req.params;
 
     if (!Object.keys(gameServer.games).includes(gameId)) {
@@ -36,6 +36,7 @@ router.route('/').post((req: any, res: any) => {
     }
 
     const token: any = game.addPlayer(username);
+    if (avatar) game.players[username].options.avatar = avatar;
     res.status(200).json({status: 'Success', token});
 }) 
 

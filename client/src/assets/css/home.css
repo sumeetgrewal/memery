@@ -48,11 +48,11 @@
 }
 
 .home-join {
-    top: 45%;
+    top: 55%;
 }
 
 .home-new {
-    top: 55%;
+    top: 45%;
 }
   
 .text-reflect:after {
@@ -93,8 +93,7 @@
 
 .id-form-input {
     width: 50px;
-    margin-top: -10px !important;
-    margin-right: 20px;
+    margin: -10px 20px 0px 0px !important;
 }
 
 .submit-btn {
@@ -104,8 +103,7 @@
 .id-form {
     position: absolute;
     margin-left: 30px;
-    margin-top: -10px;
-    top: 45%;
+    top: 55%;
 }
 
 .home-error-message {
