@@ -2,7 +2,7 @@ let jwt = require('jsonwebtoken');
 const secret = 'thisisnot7wonderseither';
 
 function createToken(username: string): any {
-  let token: any = jwt.sign({username: username},
+  let token: any = jwt.sign({username},
     secret,
     { expiresIn: '12h' }
   );
