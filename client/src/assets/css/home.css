@@ -8,10 +8,12 @@
     color: var(--medium-green);
     text-align: right;
     --margin: 30px;
+    box-shadow: 0px 0px 25px 0px #00000040;
+}
 
-     /* DARK MODE */
-    /* background-color: var(--dark-gray); 
-    color: white; */
+#home-container.dark {
+    background-color: var(--dark-gray); 
+    color: white;
 }
 
 #home-background {
@@ -21,13 +23,16 @@
     top: 0px;
     left: 450px;
     background-color: white;
+    overflow-x: hidden;
     z-index: -1;
-
-    /* DARK MODE */
-    /* background-color: var(--dark-gray);  */
 }
 
-#home-title {
+#home-background.dark {
+    background-color: var(--dark-gray);
+    box-shadow: 0px 0px 25px 0px #000000d0;
+}
+
+#home-title, .home-error-message {
     position: absolute;
     top: 25%;
     margin-right: -0.25em;
@@ -43,11 +48,11 @@
 }
 
 .home-join {
-    top: 45%;
+    top: 55%;
 }
 
 .home-new {
-    top: 55%;
+    top: 45%;
 }
   
 .text-reflect:after {
@@ -59,9 +64,10 @@
     color: transparent;
     opacity: 0.5;
     text-shadow: none;
+}
 
-     /* DARK MODE */
-    /* opacity: 0.8;  */
+.text-reflect:after.dark {
+    opacity: 0.8;
 }
 
 #home-title:after {
@@ -85,43 +91,23 @@
     transition: 0.2s all;
 }
 
-.arrow-btn:hover, .arrow-btn:focus, .arrow-btn:active {
-    transition: 0.1s all;
-    outline: none;
-    box-shadow: 0px 0px 10px 0px #00000060;
-
-    /* DARK MODE */
-    /* box-shadow: 0px 0px 10px 0px #000000d0; */
-}
-
 .id-form-input {
     width: 50px;
-    height: 50px;
-    margin-right: 20px;
-    background-color: var(--medium-green);
-    border: none;
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: white;
-    transition: 0.2s all;
-}
-
-.id-form-input:focus, .id-form-input:active {
-    transition: 0.1s all;
-    outline: none;
-    box-shadow: 0px 0px 10px 0px #00000060;
+    margin: -10px 20px 0px 0px !important;
 }
 
 .submit-btn {
-    margin: 0;
+    margin-left: 0;
 }
 
 .id-form {
     position: absolute;
     margin-left: 30px;
-    margin-top: -10px;
-    top: 45%;
+    top: 55%;
+}
+
+.home-error-message {
+    margin-left: 30px;
 }
 
 @media (max-width:500px) {

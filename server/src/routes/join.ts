@@ -2,12 +2,17 @@ import { gameServer } from '../models/gameServer.model';
 import { Player } from '../models/player.model';
 let JWTHandlers = require('../middleware/jwt.authorization');
 
-const router = require('express').Router({ mergeParams: true});
+const router = require('express').Router({ mergeParams: true });
 const MAX_PLAYERS = 8;
 
 /*
+POST /game/:gameId/join
 User selects 'Join'
-
+req.body = {
+    username: string,
+    avatar: body
+}
+res = 
     if game does not exist, return 300
     if game is in progress, return 403
     if username is taken, return 400
@@ -15,7 +20,7 @@ User selects 'Join'
     if player can be created, return 200
 */
 router.route('/').post((req: any, res: any) => {
-    const { username } = req.body;
+    const { username, avatar } = req.body;
     const { gameId } = req.params;
 
     if (!Object.keys(gameServer.games).includes(gameId)) {
@@ -36,10 +41,13 @@ router.route('/').post((req: any, res: any) => {
     }
 
     const token: any = game.addPlayer(username);
+    if (avatar) game.players[username].options.avatar = avatar;
     res.status(200).json({status: 'Success', token});
 }) 
 
 /*
+PUT /game/:gameId/join
+
 User selects I'm Ready
 
     check token
@@ -73,6 +81,8 @@ router.route('/').put((req: any, res: any) => {
 })
 
 /*
+DELETE /game/:gameId/join
+
 User selects Exit
 
     return 200
@@ -103,6 +113,7 @@ router.route('/').delete((req: any, res: any) => {
 })
 
 /*
+GET /game/:gameId/join/start
 Any User selects Start game
 
     if all players are ready, start game
