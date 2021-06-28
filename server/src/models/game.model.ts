@@ -40,7 +40,11 @@ export class Game implements GameModel {
     }
 
     sendPlayerUpdate() {
-        pushUpdateToPlayers(this.gameId, JSON.stringify({players: this.players}), 'playerUpdate', Object.keys(this.players));
+        let players = {...this.players};
+        Object.keys(players).forEach((username: string) => {
+            delete players[username].client;
+        })
+        pushUpdateToPlayers(this.gameId, JSON.stringify(players), 'playerUpdate', Object.keys(this.players));
     }
 
     sendGameUpdate() {
@@ -54,26 +58,15 @@ export class Game implements GameModel {
     }
 }
 
-// export function pushUpdateToPlayers(data: string, event: string = 'message', clients: any[]) {
-//     clients.forEach((client: any) => {
-//         if (client) {
-//             client.write(`id: ${sseID++}\n`);
-//             client.write(`event: ${event}\n`);
-//             client.write(`data: ${data}\n\n`);
-//             client.flush();
-//         }
-//     });
-// }
-
 export function pushUpdateToPlayers(gameId: string, data: string, event: string = 'message', usernames: string[]) {
     const game: Game = gameServer.games[gameId];
     usernames.forEach((username: any) => {
-        const client: any = game?.players[username]?.client;
-        if (client) {
-            client.write(`id: ${sseID++}\n`);
-            client.write(`event: ${event}\n`);
-            client.write(`data: ${data}\n\n`);
-            client.flush();
+        const player: any = game?.players[username]?.client;
+        if (player) {
+            player.write(`id: ${sseID++}\n`);
+            player.write(`event: ${event}\n`);
+            player.write(`data: ${data}\n\n`);
+            player.flush();
         }
     });
 }

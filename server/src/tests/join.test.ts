@@ -58,6 +58,16 @@ describe('POST /game/:gameId/join', () => {
         })
     })
 
+    it('Second player joins -> 200', async () => {
+        let req: any = {
+            username: 'Player Two', 
+            avatar: "",
+        }
+
+        await testEndpoint('post', `/game/${gameId}/join`, JSON.stringify(req), "", 200)
+    })
+
+
     it('Game is in progress -> 400', async () => {
         let req: any = {
             username: 'Player One'

@@ -19,7 +19,7 @@ router.route('/').get((req: any, res: any) => {
     res.end();
     game.removePlayer(username);
   })
-  console.log(game.players);
+  // console.log(game.players);
 })
 
 function addClientToGame(game: Game, username: string, client: any) {

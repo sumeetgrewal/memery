@@ -6,8 +6,13 @@ const router = require('express').Router({ mergeParams: true });
 const MAX_PLAYERS = 8;
 
 /*
+POST /game/:gameId/join
 User selects 'Join'
-
+req.body = {
+    username: string,
+    avatar: body
+}
+res = 
     if game does not exist, return 300
     if game is in progress, return 403
     if username is taken, return 400
@@ -41,6 +46,8 @@ router.route('/').post((req: any, res: any) => {
 }) 
 
 /*
+PUT /game/:gameId/join
+
 User selects I'm Ready
 
     check token
@@ -74,6 +81,8 @@ router.route('/').put((req: any, res: any) => {
 })
 
 /*
+DELETE /game/:gameId/join
+
 User selects Exit
 
     return 200
@@ -104,6 +113,7 @@ router.route('/').delete((req: any, res: any) => {
 })
 
 /*
+GET /game/:gameId/join/start
 Any User selects Start game
 
     if all players are ready, start game
