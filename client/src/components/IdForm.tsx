@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ClipboardEvent, useState } from 'react'
 import arrow from '../assets/images/arrow-light.png'
 
 interface IdFormProps {
@@ -11,22 +11,20 @@ export default function IdForm (props: IdFormProps) {
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
-        props.submitHandler(formValue.join(""));
+        if (formValue.join("").length === props.numInputs) {
+            props.submitHandler(formValue.join(""));
+        }
     }
     
     const handleInputChange = (e: any ) => {
         const { id, value } = e?.target;
         const newId = [...formValue];
 
-        newId[Number(id)] = value;
-        setFormValue(newId);
-
-        let element = document.getElementById(id)
-        let next = element?.nextElementSibling;
-
-        if (value.length === 1 && next) {
-            (next as HTMLElement).focus()
-        } 
+        if (value !== " ") {
+            newId[Number(id)] = value;
+            setFormValue(newId);
+            if (value.length === 1) advanceCursor(id, [value]);
+        }
     }
 
     const handleBack = (e: any) => {
@@ -54,13 +52,32 @@ export default function IdForm (props: IdFormProps) {
                     id={`${i}`} autoFocus={i===0}
                     autoComplete={"off"}
                     onKeyDown={handleBack} onChange={handleInputChange}
+                    onPaste={(e: ClipboardEvent<HTMLInputElement>) => handlePaste(e)}
                 />
             )
         }
         return inputs;  
     }
 
-    return (<form name="IdForm" className="id-form">
+    const handlePaste = (event: ClipboardEvent<HTMLInputElement>) => {
+        event.preventDefault()
+        let pastedValues = event.clipboardData.getData('text').split('');
+
+        const { id } = event.currentTarget;
+        let newId = [...formValue].splice(Number(id), pastedValues.length, ...pastedValues);
+        newId = newId.slice(0, props.numInputs);
+        setFormValue(newId);
+        advanceCursor(id, pastedValues.slice(0, props.numInputs));
+    }
+    
+    const advanceCursor = (startId: any, value: any) => {
+        let element = document.getElementById(startId)
+        let next = element?.nextElementSibling;
+        if (value.length >= 1 && next) (next as HTMLElement).focus()
+        if (value.shift() !== undefined) advanceCursor(next?.id, value);
+    }
+
+    return (<form name="IdForm" className="id-form"> 
         {renderInputs()}
         <input type="image" src={arrow} className={`arrow-btn submit-btn`} 
             alt="arrow button" id="submit-game-id" 
